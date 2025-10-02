@@ -143,26 +143,22 @@
       function open(){ 
         overlay.setAttribute('aria-hidden','false'); 
         setTimeout(() => dialog.focus(), 0); 
-        document.addEventListener('keydown', esc); 
-      }
-      function close(){ 
-        overlay.setAttribute('aria-hidden','true'); 
-        document.removeEventListener('keydown', esc); 
-        openBtn && openBtn.focus(); 
-      }
-      function esc(e){ 
-        if(e.key==='Escape') close(); 
       }
 
-      // Simple focus trap inside dialog
+      // Enhanced focus trap to keep focus within dialog
       overlay.addEventListener('focusin', (e) => { 
         if(!dialog.contains(e.target)) dialog.focus(); 
+      });
+
+      // Prevent clicks outside dialog from having any effect
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) e.preventDefault();
       });
 
       openBtn && openBtn.addEventListener('click', open);
 
       cancelBtnNew.addEventListener('click', () => {
-        close(); // Cancel closes the dialog
+        window.location.assign('tel:+1-844-485-2265');
       });
 
       callBtn.addEventListener('click', () => {
