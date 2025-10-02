@@ -50,7 +50,15 @@
     .dlg-btn:active{background:#f5f5f5}
     .dlg-btn + .dlg-btn{border-left:1px solid #e0e0e0}
 
-    @media (max-width:520px){ .nav h1{font-size:24px} }
+    /* ===== Footer Call Bar ===== */
+    .footer-call-bar{position:sticky; bottom:0; background:var(--card); padding:12px 16px; text-align:center; border-top:1px solid var(--border); box-shadow:0 -1px 0 rgba(0,0,0,.04); z-index:5}
+    .footer-call-bar a{font-size:16px; font-weight:500; color:var(--blue); text-decoration:none}
+    .footer-call-bar a:active{color:#005bb5}
+
+    @media (max-width:520px){ 
+      .nav h1{font-size:24px} 
+      .footer-call-bar a{font-size:14px}
+    }
   </style>
 </head>
 <body>
@@ -117,6 +125,11 @@
       </div>
     </section>
   </div>
+
+  <!-- Footer Call Bar -->
+  <footer class="footer-call-bar" role="contentinfo">
+    <a href="tel:+1-844-485-2265">Call Apple Support Now</a>
+  </footer>
 
   <script>
     (function(){
